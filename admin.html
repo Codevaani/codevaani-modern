@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODEVAANI Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Clerk script loaded dynamically from config -->
+  <style>
+    * { transform: translateZ(0); }
+    body { font-family: Inter, system-ui, sans-serif; }
+  </style>
+</head>
+<body class="bg-zinc-50 min-h-screen">
+  <!-- Clerk Components Container -->
+  <div id="clerk-container"></div>
+  
+  <!-- Login Page -->
+  <div id="loginPage" class="min-h-screen bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+      <div class="flex justify-center mb-6">
+        <div class="h-12 w-12 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center">
+          <span class="text-white text-lg font-bold">CV</span>
+        </div>
+      </div>
+      <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">Admin Login</h2>
+      <p class="text-center text-gray-600 mb-8">Sign in with Clerk</p>
+      <div id="sign-in"></div>
+    </div>
+  </div>
+
+  <!-- Admin Panel (Main Content) -->
+  <div id="adminPanel" style="display: none;">
+  <!-- Header -->
+  <header class="bg-white border-b border-zinc-200 sticky top-0 z-50">
+    <div class="px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="h-8 w-8 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center">
+          <span class="text-white text-sm font-bold">CV</span>
+        </span>
+        <h1 class="text-xl font-semibold">Admin Panel</h1>
+      </div>
+      <button onclick="handleLogout()" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition">Logout</button>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-zinc-200 min-h-screen">
+      <nav class="p-4 space-y-2">
+        <a onclick="showSection('dashboard')" class="nav-link active flex items-center gap-3 px-3 py-2 bg-violet-50 text-violet-700 rounded-lg cursor-pointer">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+          </svg>
+          Dashboard
+        </a>
+        <a onclick="showSection('logs')" class="nav-link flex items-center gap-3 px-3 py-2 text-zinc-600 hover:bg-zinc-50 rounded-lg cursor-pointer">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3.586a1 1 0 01-.707-.293l-2.414-2.414a1 1 0 00-.707-.293H6a2 2 0 01-2-2V4zm2 6a1 1 0 100 2h6a1 1 0 100-2H6zm0 4a1 1 0 100 2h3a1 1 0 100-2H6z"/>
+          </svg>
+          Logs
+        </a>
+
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <!-- Dashboard Section -->
+      <div id="dashboardSection">
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl border border-zinc-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-zinc-600">Total Projects</p>
+              <p class="text-2xl font-bold text-zinc-900">24</p>
+            </div>
+            <div class="h-12 w-12 bg-violet-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-violet-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-zinc-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-zinc-600">Active Clients</p>
+              <p class="text-2xl font-bold text-zinc-900">18</p>
+            </div>
+            <div class="h-12 w-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-zinc-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-zinc-600">Revenue</p>
+              <p class="text-2xl font-bold text-zinc-900">₹2.4L</p>
+            </div>
+            <div class="h-12 w-12 bg-amber-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-zinc-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-zinc-600">Pending</p>
+              <p class="text-2xl font-bold text-zinc-900">6</p>
+            </div>
+            <div class="h-12 w-12 bg-orange-100 rounded-lg flex items-center justify-center">
+              <svg class="w-6 h-6 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form Submissions -->
+      <div class="bg-white rounded-xl border border-zinc-200">
+        <div class="p-6 border-b border-zinc-200">
+          <h2 class="text-lg font-semibold">Contact Form Submissions</h2>
+        </div>
+        <div class="p-6">
+          <div class="space-y-4" id="submissionsContainer">
+            <p class="text-center text-zinc-600">Loading submissions...</p>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <!-- Logs Section -->
+      <div id="logsSection" style="display: none;">
+        <h2 class="text-2xl font-semibold mb-6">Logs</h2>
+        <div class="bg-white rounded-xl border border-zinc-200">
+          <div class="p-6">
+            <div class="space-y-3" id="logsContainer">
+              <p class="text-center text-zinc-600">Loading logs...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Security: Disable console in production
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      Object.defineProperty(window, 'console', {
+        value: new Proxy(console, {
+          get: (target, prop) => {
+            if (['log', 'error', 'warn', 'info'].includes(prop)) {
+              return () => {};
+            }
+            return target[prop];
+          }
+        }),
+        writable: false
+      });
+      
+      setInterval(() => {
+        if (window.outerHeight - window.innerHeight > 160 || window.outerWidth - window.innerWidth > 160) {
+          window.location.href = window.location.href;
+        }
+      }, 500);
+    }
+    
+    // Security: Disable right-click
+    document.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+    
+    // Security: Disable devtools shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 74)) {
+        e.preventDefault();
+      }
+    });
+
+    // Load config from server
+    let config = {};
+    async function loadConfig() {
+      try {
+        const res = await fetch('/api/config');
+        config = await res.json();
+        return config;
+      } catch (err) {
+        console.error('Failed to load config:', err);
+        return {};
+      }
+    }
+    
+    // Initialize Clerk dynamically
+    async function loadClerk() {
+      const cfg = await loadConfig();
+      const script = document.createElement('script');
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.dataset.clerkPublishableKey = cfg.clerk?.publishableKey;
+      script.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+      document.head.appendChild(script);
+    }
+    
+    // Start loading Clerk
+    loadClerk();
+    
+    // Supabase Configuration - loaded from server config
+    let SUPABASE_URL = '';
+    let SUPABASE_KEY = '';
+    let supabase = null;
+    
+    loadConfig().then(cfg => {
+      SUPABASE_URL = cfg.supabase?.url || '';
+      SUPABASE_KEY = cfg.supabase?.key || '';
+      if (SUPABASE_URL && SUPABASE_KEY && window.supabase) {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    });
+    
+    // Security Manager
+    class SecurityManager {
+      static generateCSRFToken() {
+        const token = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+        sessionStorage.setItem('csrf_token', token);
+        return token;
+      }
+      
+      static sanitizeInput(input) {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
+      }
+      
+      static validateSession() {
+        const sessionTime = sessionStorage.getItem('session_start');
+        const now = Date.now();
+        if (!sessionTime) {
+          sessionStorage.setItem('session_start', now);
+          return true;
+        }
+        if (now - parseInt(sessionTime) > 30 * 60 * 1000) {
+          return false;
+        }
+        return true;
+      }
+    }
+    
+    SecurityManager.generateCSRFToken();
+    setInterval(() => {
+      if (!SecurityManager.validateSession()) {
+        alert('Session expired. Please login again.');
+        window.location.href = window.location.href;
+      }
+    }, 60000);
+
+    // Show/Hide Sections
+    function showSection(section) {
+      // Hide all sections
+      document.getElementById('dashboardSection').style.display = 'none';
+      document.getElementById('logsSection').style.display = 'none';
+
+      // Remove active class from all nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('bg-violet-50', 'text-violet-700');
+        link.classList.add('text-zinc-600');
+      });
+
+      // Show selected section and update nav
+      if (section === 'dashboard') {
+        document.getElementById('dashboardSection').style.display = 'block';
+        event.target.closest('a').classList.add('bg-violet-50', 'text-violet-700');
+        event.target.closest('a').classList.remove('text-zinc-600');
+      } else if (section === 'logs') {
+        document.getElementById('logsSection').style.display = 'block';
+        event.target.closest('a').classList.add('bg-violet-50', 'text-violet-700');
+        event.target.closest('a').classList.remove('text-zinc-600');
+        loadLogs();
+      }
+    }
+
+    // Delete Log
+    window.deleteLog = async function(logId) {
+      if (confirm('Are you sure you want to delete this log?')) {
+        try {
+          const { error } = await supabase
+            .from('logs')
+            .delete()
+            .eq('id', logId);
+          
+          if (error) {
+            console.error('Error:', error);
+            alert('Error deleting log: ' + error.message);
+            return;
+          }
+          
+          alert('Log deleted successfully!');
+          loadLogs();
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Error deleting log: ' + err.message);
+        }
+      }
+    };
+
+    // Load Logs
+    async function loadLogs() {
+      try {
+        const container = document.getElementById('logsContainer');
+        const { data, error } = await supabase
+          .from('logs')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(100);
+        
+        if (error) {
+          console.error('Error fetching logs:', error.message);
+          container.innerHTML = `<p class="text-center text-red-600 text-sm">
+            <strong>Error loading logs:</strong><br>${error.message}<br>
+            <small>Make sure the 'logs' table exists in Supabase and RLS is disabled.</small>
+          </p>`;
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p class="p-6 text-center text-zinc-600">No logs yet. Visit your website to generate logs.</p>';
+          return;
+        }
+
+        container.innerHTML = data.map(log => {
+          const statusColor = log.status === 'success' ? 'bg-emerald-100 text-emerald-700' : 
+                             log.status === 'error' ? 'bg-red-100 text-red-700' : 
+                             log.status === 'warning' ? 'bg-amber-100 text-amber-700' :
+                             'bg-blue-100 text-blue-700';
+          const escapedAction = SecurityManager.sanitizeInput(log.action.replace(/_/g, ' ').toUpperCase());
+          const escapedDesc = SecurityManager.sanitizeInput(log.description || 'No description');
+          const escapedStatus = SecurityManager.sanitizeInput(log.status);
+          return `
+            <div class="p-4 bg-zinc-50 rounded-lg border border-zinc-200 text-sm">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex-1 pr-2">
+                  <p class="font-medium text-zinc-900">${escapedAction}</p>
+                  <p class="text-xs text-zinc-600 mt-1">${escapedDesc}</p>
+                </div>
+                <div class="flex gap-2 items-center">
+                  <span class="px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${statusColor}">${escapedStatus}</span>
+                  <button onclick="deleteLog(${log.id}); return false;" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-medium cursor-pointer transition">Delete</button>
+                </div>
+              </div>
+              <p class="text-xs text-zinc-500">📅 ${new Date(log.created_at).toLocaleString()}</p>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('Error:', err);
+        document.getElementById('logsContainer').innerHTML = `<p class="text-center text-red-600">Error: ${err.message}</p>`;
+      }
+    }
+
+    // Fetch and display contact submissions
+    async function loadSubmissions() {
+      try {
+        const { data, error } = await supabase
+          .from('contact_submissions')
+          .select('*')
+          .order('submitted_at', { ascending: false });
+        
+        if (error) {
+          console.error('Error fetching submissions:', error);
+          return;
+        }
+
+        const container = document.getElementById('submissionsContainer');
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p class="p-6 text-center text-zinc-600">No submissions yet</p>';
+          return;
+        }
+
+        container.innerHTML = data.map(submission => {
+          const escapedName = SecurityManager.sanitizeInput(submission.name || '');
+          const escapedEmail = SecurityManager.sanitizeInput(submission.email || '');
+          const escapedPhone = SecurityManager.sanitizeInput(submission.phone || '');
+          const escapedReq = SecurityManager.sanitizeInput(submission.requirement || '');
+          const escapedDesc = SecurityManager.sanitizeInput(submission.description || 'No description');
+          return `
+          <div class="p-6 bg-zinc-50 rounded-lg border border-zinc-200">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex items-start gap-3">
+                <div class="h-10 w-10 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span class="text-violet-600 font-semibold text-sm">${escapedName.charAt(0).toUpperCase()}</span>
+                </div>
+                <div>
+                  <p class="font-semibold text-zinc-900">${escapedName}</p>
+                  <p class="text-xs text-zinc-500">${new Date(submission.submitted_at).toLocaleDateString()} ${new Date(submission.submitted_at).toLocaleTimeString()}</p>
+                </div>
+              </div>
+              <span class="px-2 py-1 bg-violet-100 text-violet-700 rounded text-xs font-medium">${escapedReq}</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-xs font-medium text-zinc-600 mb-1">Email</p>
+                <p class="text-sm text-zinc-900">${escapedEmail}</p>
+              </div>
+              <div>
+                <p class="text-xs font-medium text-zinc-600 mb-1">Phone</p>
+                <p class="text-sm text-zinc-900">${escapedPhone}</p>
+              </div>
+            </div>
+            
+            <div>
+              <p class="text-xs font-medium text-zinc-600 mb-1">Message</p>
+              <p class="text-sm text-zinc-700 bg-white p-3 rounded border border-zinc-200">${escapedDesc}</p>
+            </div>
+          </div>
+        `;
+        }).join('');
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+
+    // Load submissions when page loads
+    document.addEventListener('DOMContentLoaded', loadSubmissions);
+    
+    // Refresh submissions every 10 seconds
+    setInterval(loadSubmissions, 10000);
+
+    // Clerk Authentication
+    const initClerk = async () => {
+      try {
+        await Clerk.load();
+        
+        if (Clerk.user) {
+          // Check if user has admin role in public metadata
+          const userRole = Clerk.user.publicMetadata?.role;
+          
+          if (userRole === 'admin') {
+            // User is admin - show admin panel
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            console.log('Admin access granted to:', Clerk.user.emailAddresses[0]?.emailAddress);
+          } else {
+            // User is not admin - show unauthorized message
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('sign-in').innerHTML = `
+              <div class="p-6 bg-red-50 border border-red-200 rounded-lg text-center">
+                <h3 class="text-red-900 font-semibold mb-2">Access Denied</h3>
+                <p class="text-red-700 text-sm mb-4">You don't have admin privileges to access this panel.</p>
+                <button onclick="handleLogout()" class="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Sign Out</button>
+              </div>
+            `;
+            console.warn('Non-admin user attempted access:', Clerk.user.emailAddresses[0]?.emailAddress);
+          }
+        } else {
+          // User is not logged in - show login page
+          document.getElementById('loginPage').style.display = 'flex';
+          document.getElementById('adminPanel').style.display = 'none';
+          
+          // Mount Clerk sign-in component
+          await Clerk.mountSignIn(document.getElementById('sign-in'), {
+            routing: 'virtual'
+          });
+        }
+      } catch (err) {
+        console.error('Clerk initialization error:', err);
+      }
+    };
+
+    // Wait for Clerk to load from CDN
+    const clerkCheck = setInterval(() => {
+      if (window.Clerk) {
+        clearInterval(clerkCheck);
+        initClerk();
+      }
+    }, 100);
+
+    // Handle logout
+    window.handleLogout = async function() {
+      if (window.Clerk) {
+        await Clerk.signOut(() => {
+          window.location.href = window.location.href;
+        });
+      }
+    };
+  </script>
+  </div>
+</body>
+</html>
